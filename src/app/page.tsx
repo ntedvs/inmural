@@ -1,12 +1,14 @@
 "use client"
 
+import { domain } from "@/utils"
+import Link from "next/link"
 import { useActionState, useEffect, useState } from "react"
 import { getAccessToken, getAlbumCovers } from "./actions"
 
 export default function Home() {
   const [token, setToken] = useState("")
   const [{ urls, data }, action, pending] = useActionState(getAlbumCovers, {
-    urls: [],
+    urls: new Set(),
     data: { width: 5, height: 5, quality: 300 },
   })
 
@@ -39,7 +41,7 @@ export default function Home() {
   }
 
   useEffect(() => {
-    if (!urls.length) return
+    if (!urls.size) return
 
     const { width, height, quality } = data
     const canvas = document.querySelector("canvas")!
@@ -47,7 +49,7 @@ export default function Home() {
     canvas.width = width * quality
     canvas.height = height * quality
 
-    urls.forEach((url, i) => {
+    Array.from(urls as Set<string>).forEach((url, i) => {
       const img = document.createElement("img")
       img.src = url
 
@@ -65,7 +67,17 @@ export default function Home() {
 
   return (
     <>
-      <h1 className="mb-4 text-4xl font-semibold">Inmural</h1>
+      <div className="mb-4 flex items-center justify-between">
+        <h1 className="text-4xl font-bold">Inmural</h1>
+
+        <Link
+          href="https://github.com/NaeNate/inmural"
+          target="_blank"
+          className="text-2xl font-semibold underline"
+        >
+          GitHub
+        </Link>
+      </div>
 
       {token ? (
         <>
@@ -75,7 +87,7 @@ export default function Home() {
               id="width"
               name="width"
               type="number"
-              defaultValue="5"
+              defaultValue={data.width}
               className="rounded border-2 border-blue-500 p-2"
             />
 
@@ -84,7 +96,7 @@ export default function Home() {
               id="height"
               name="height"
               type="number"
-              defaultValue="5"
+              defaultValue={data.height}
               className="rounded border-2 border-blue-500 p-2"
             />
 
@@ -92,7 +104,6 @@ export default function Home() {
             <select
               id="term"
               name="term"
-              defaultValue="medium"
               className="h-11 rounded border-2 border-blue-500 p-2"
             >
               <option value="short">Short</option>
@@ -129,13 +140,14 @@ export default function Home() {
           onClick={() => {
             const state = random()
 
+            console.log(domain)
             localStorage.setItem("state", state)
             location.href =
               "https://accounts.spotify.com/authorize?" +
               new URLSearchParams({
                 client_id: "4de1f2bed60e4e0db864610c6ae492f6",
                 response_type: "code",
-                redirect_uri: "http://localhost:3000",
+                redirect_uri: domain,
                 scope: "user-top-read",
                 state,
               })
