@@ -1,16 +1,22 @@
 "use client"
 
 import { domain } from "@/utils"
+import Image from "next/image"
 import Link from "next/link"
 import { useActionState, useEffect, useState } from "react"
+import logo from "../../public/logo.png"
 import { getAccessToken, getAlbumCovers } from "./actions"
 
 export default function Home() {
   const [token, setToken] = useState("")
-  const [{ urls, data }, action, pending] = useActionState(getAlbumCovers, {
-    urls: new Set(),
-    data: { width: 5, height: 5, quality: 300 },
-  })
+  const [{ urls, meta, data }, action, pending] = useActionState(
+    getAlbumCovers,
+    {
+      urls: new Set(),
+      meta: [],
+      data: { width: 5, height: 5, quality: 300 },
+    },
+  )
 
   useEffect(() => {
     const proxy = async () => {
@@ -70,10 +76,12 @@ export default function Home() {
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-4xl font-bold">Inmural</h1>
 
+        <Image src={logo} alt="Spotify Logo" width={200} />
+
         <Link
           href="https://github.com/NaeNate/inmural"
           target="_blank"
-          className="text-2xl font-semibold underline"
+          className="text-4xl font-bold"
         >
           GitHub
         </Link>
@@ -134,28 +142,38 @@ export default function Home() {
           </form>
 
           <canvas className="mx-auto mt-4 w-4/5" />
+
+          <div className="mx-auto mt-4 flex w-3/5 flex-wrap justify-center gap-x-4 gap-y-2">
+            {meta.map(({ name, uri }) => (
+              <Link href={uri} className="" key={uri}>
+                {name}
+              </Link>
+            ))}
+          </div>
         </>
       ) : (
-        <button
-          onClick={() => {
-            const state = random()
+        <div className="flex justify-center">
+          <button
+            onClick={() => {
+              const state = random()
 
-            console.log(domain)
-            localStorage.setItem("state", state)
-            location.href =
-              "https://accounts.spotify.com/authorize?" +
-              new URLSearchParams({
-                client_id: "4de1f2bed60e4e0db864610c6ae492f6",
-                response_type: "code",
-                redirect_uri: domain,
-                scope: "user-top-read",
-                state,
-              })
-          }}
-          className="cursor-pointer rounded bg-blue-500 p-2 text-white"
-        >
-          Sign in with Spotify
-        </button>
+              console.log(domain)
+              localStorage.setItem("state", state)
+              location.href =
+                "https://accounts.spotify.com/authorize?" +
+                new URLSearchParams({
+                  client_id: "4de1f2bed60e4e0db864610c6ae492f6",
+                  response_type: "code",
+                  redirect_uri: domain,
+                  scope: "user-top-read",
+                  state,
+                })
+            }}
+            className="mt-4 cursor-pointer rounded-lg bg-blue-500 p-8 text-2xl font-semibold text-white"
+          >
+            Sign in with Spotify
+          </button>
+        </div>
       )}
     </>
   )
