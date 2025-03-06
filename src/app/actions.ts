@@ -43,7 +43,7 @@ export const getAlbumCovers = async (state: any, fd: FormData) => {
   const height = +h
 
   const total = width * height
-  const urls = new Set()
+  const urls: string[] = []
   const meta: { name: string; uri: string }[] = []
 
   const fetchAlbumCovers = async (i: number) => {
@@ -53,13 +53,16 @@ export const getAlbumCovers = async (state: any, fd: FormData) => {
     ).then((res) => res.json())
 
     items.forEach((item: any) => {
-      if (meta.length >= total) return
+      if (urls.length >= total) return
+      const url = item.album.images[index].url
 
-      urls.add(item.album.images[index].url)
-      meta.push({ name: item.album.name, uri: item.album.uri })
+      if (!urls.includes(url)) {
+        urls.push(url)
+        meta.push({ name: item.album.name, uri: item.album.uri })
+      }
     })
 
-    if (urls.size < total) await fetchAlbumCovers(i + 1)
+    if (urls.length < total) await fetchAlbumCovers(i + 1)
   }
 
   await fetchAlbumCovers(0)
