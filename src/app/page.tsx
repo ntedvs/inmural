@@ -12,7 +12,7 @@ export default function Home() {
   const [{ urls, meta, data }, action, pending] = useActionState(
     getAlbumCovers,
     {
-      urls: new Set(),
+      urls: [],
       meta: [],
       data: { width: 5, height: 5, quality: 300 },
     },
@@ -47,7 +47,7 @@ export default function Home() {
   }
 
   useEffect(() => {
-    if (!urls.size) return
+    if (!urls.length) return
 
     const { width, height, quality } = data
     const canvas = document.querySelector("canvas")!
@@ -55,7 +55,7 @@ export default function Home() {
     canvas.width = width * quality
     canvas.height = height * quality
 
-    Array.from(urls as Set<string>).forEach((url, i) => {
+    urls.forEach((url, i) => {
       const img = document.createElement("img")
       img.src = url
 
@@ -133,7 +133,7 @@ export default function Home() {
 
             <button
               disabled={pending}
-              className="cursor-pointer rounded bg-blue-500 p-2 text-white"
+              className="cursor-pointer rounded bg-blue-500 p-2 text-white disabled:cursor-not-allowed disabled:bg-blue-500/80"
             >
               Go
             </button>
@@ -144,8 +144,8 @@ export default function Home() {
           <canvas className="mx-auto mt-4 w-4/5" />
 
           <div className="mx-auto mt-4 flex w-3/5 flex-wrap justify-center gap-x-4 gap-y-2">
-            {meta.map(({ name, uri }) => (
-              <Link href={uri} className="" key={uri}>
+            {meta.map(({ name, uri }, i) => (
+              <Link href={uri} key={i}>
                 {name}
               </Link>
             ))}
