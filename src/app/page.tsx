@@ -152,7 +152,7 @@ export default function Home() {
           </div>
         </>
       ) : (
-        <div className="flex justify-center">
+        <div className="flex flex-col items-center gap-4">
           <button
             onClick={() => {
               const state = random()
@@ -173,6 +173,29 @@ export default function Home() {
           >
             Sign in with Spotify
           </button>
+
+          <p>
+            By using this app, you agree that Spotify provides its services and
+            content “as is” without any warranties, including implied warranties
+            of merchantability, fitness for a particular purpose, or
+            non-infringement. You may not modify, create derivative works of,
+            reverse-engineer, decompile, or otherwise attempt to access the
+            source code of Spotify&apos;s services or content. You acknowledge
+            that the app, not Spotify, is solely responsible for its
+            functionality and content. Spotify is a third-party beneficiary of
+            this agreement and our privacy policy and has the right to enforce
+            these terms directly.
+          </p>
+
+          <p>
+            This app does not collect or store any personal data. It uses the
+            Spotify Web API to access your top songs, which are used solely to
+            generate a grid of album covers within the app. No data is shared
+            with third parties. We do not use cookies or allow third parties to
+            place cookies. For questions about your data or privacy, you can
+            contact us via the GitHub link provided on the site. Your use of the
+            app is subject to our privacy policy.
+          </p>
         </div>
       )}
     </>
