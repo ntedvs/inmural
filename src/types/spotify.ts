@@ -19,6 +19,9 @@ export interface SpotifyAlbum {
   total_tracks: number;
   uri: string;
   href: string;
+  external_urls: {
+    spotify: string;
+  };
 }
 
 export interface SpotifyTrack {

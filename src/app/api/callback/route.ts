@@ -19,15 +19,9 @@ export async function GET(request: NextRequest) {
 
   // Server-side token exchange to prevent XSS
   try {
-    console.log(request.cookies + ":SLDKJF:LKJ:LKJ")
     const codeVerifier = request.cookies.get("code_verifier")?.value
 
-    // Debug logging
-    console.log("All cookies:", request.cookies.getAll())
-    console.log("Code verifier from cookie:", codeVerifier)
-
     if (!codeVerifier) {
-      console.log("No code verifier found in cookies")
       return NextResponse.redirect(
         new URL("/?error=Missing code verifier", request.url),
       )
@@ -87,10 +81,6 @@ export async function GET(request: NextRequest) {
       String(Date.now() + tokenData.expires_in * 1000),
       cookieOptions,
     )
-
-    // Debug logging
-    console.log("Successfully set tokens in cookies")
-    console.log("Cookie options:", cookieOptions)
 
     // Remove code verifier cookie
     response.cookies.delete("code_verifier")

@@ -55,10 +55,5 @@ export async function POST() {
     maxAge: 600, // 10 minutes
   })
 
-  console.log(
-    "Set code verifier cookie:",
-    codeVerifier.substring(0, 10) + "...",
-  )
-
   return response
 }

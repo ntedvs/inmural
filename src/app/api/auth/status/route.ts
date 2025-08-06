@@ -5,12 +5,7 @@ export async function GET(request: NextRequest) {
   const tokenExpires = request.cookies.get("spotify_token_expires")?.value
 
   // Debug logging
-  console.log("Auth status check - all cookies:", request.cookies.getAll())
-  console.log("Access token found:", !!accessToken)
-  console.log("Token expires found:", !!tokenExpires)
-
   if (!accessToken || !tokenExpires) {
-    console.log("Missing tokens, returning unauthenticated")
     return NextResponse.json({ authenticated: false }, { status: 401 })
   }
 
